@@ -1,5 +1,5 @@
-# blogCC
-blog for CC
+# Crud blog
+
 
 Use these commands in the terminal to create a table:
     python

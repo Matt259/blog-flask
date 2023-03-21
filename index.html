@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="main-block">
+    <div class="left-part"></div>
+    <form class="user-input" action="{{url_for('insert')}}" method = "post">
+        <h1>Create a post</h1>
+        <div class="info">
+            <input type="text" name="fullname" placeholder="Full name" id = "names" required>
+            <input type= "date" name="date" placeholder="Date" id = "maxdate" required>
+            <input type= "url" name="pictureURL" placeholder="Picture URL" required>
+        </div>
+        <p>Comment</p>
+        <div>
+            <textarea rows="6" name = "comment" required></textarea>
+        </div>
+        <button type="submit" href="/" class = "subButton">Submit</button>
+        
+                    <!-- flash message -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p id = "msg">{{message}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </form>
+    <!-- Year filter dropdown -->
+    </div>
+    <div class = "filter">
+        <select id = "year-filter" onchange="searchFilter()">
+            <option id = "2022"class = "dates"></option> 
+            {% for date in dates %}
+                <option class = "dates">{{date}}</option> 
+            {% endfor %}    
+        </select>
+    </div>
+
+    <!-- All the blogs off the database -->
+    {% for blog in blogs %}
+        <div class="main-block2">
+            <div class = "blog">
+                <div class = "image-username-date">
+                    <div class = "image">
+                        <img src ="{{blog.picture_url}}" alt="Not an image link" width="250" height="250">
+                    </div>
+                    <div class = "username-date">
+                        <h2>{{blog.fullname}}</h2>
+                        <p class = "blog-date" id = "date">{{blog.date}}</p>
+                    </div>
+                </div>
+                <div class = "comment">
+                    <p>{{blog.comment}}</p>
+                </div>
+                <div class = "crudButtons">
+                    <a href = "/delete/{{blog.id}}" class = "deletebtn" onclick="return confirm('Are you sure?')">DELETE</a>
+                    <a class ="editbtn">Edit</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for the edit pop up-->
+        <div class="bg-modal">
+            <div class="modal-content">
+                <form class="edit-form" action = "/update/{{blog.id}}" method = "post">
+                    <h2 style="text-align: center;">Edit blog</h2>
+                    <input type="text" name="edit-fullname" placeholder="Full name" id = "names" required value = "{{blog.fullname}}">
+                    <input type= "date" name="edit-date" placeholder="Date" id = "maxdate2" class="maxdateblogs" required value = "{{blog.date}}">
+                    <input type= "url" name="edit-pictureURL" placeholder="Picture URL" required value = "{{blog.picture_url}}">
+                    <textarea rows="6" name = "edit-comment" required>{{blog.comment}}</textarea>
+                    <div class = "editbtns">
+                        <button href="/update/{{blog.id}}" class ="submitbtn">Submit</button>
+                        <a class ="closebtn">Close</a>
+                    </div>                   
+                </form>
+            </div>
+        </div>  
+    {% endfor %}
+    <script type="text/javascript" src = "{{ url_for('static', filename='blogtweaks.js')}}"></script>
+</body>
+
+</html>
